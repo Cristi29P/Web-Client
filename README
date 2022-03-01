@@ -1,0 +1,86 @@
+321CA Paris Cristian-Tanase
+
+Flow-ul programului:
+    Intr-o bucla while infinita se tot citesc comenzi pana se primeste 'exit'.
+    Pentru a ne asigura ca aceste comenzi merg bine, s-a decis inchiderea si
+redeschiderea conexiunii pentru fiecare dintre comenzi in parte, din cauza faptului
+ca conexiunea client-server expira dupa o perioada scurta de timp.
+
+
+Register:
+    Se verifica daca clientul este deja autentificat(exista cookie-ul) si trimit
+un mesaj corespunzator in cazul in care este, deoarece register-ul nu se poate 
+realiza.
+    Se afiseaza un prompt pentru colectarea datelor, se creeaza obiectul json care
+este convertit intr-un string si incapsulat in request-ul de tip get care este
+trimis catre server.
+    Verific raspunsul de la server si vad daca datele trimise corespund unui client
+deja inregsistrat si afisez un mesaj corespunzator(success sau fail).
+
+
+Login:
+    Verific, la fel ca la register, daca clientul este deja autentificat(cookie-ul de
+sesiune exista).
+    Colectez informatiile necesare, trimit request catre server si verific daca raspun-
+sul de la acesta contine un cookie de sesiune, caz in care ne-am logat cu succes.
+Altfel, intorc un mesaj de eroare.
+
+
+Enter_library:
+    Daca user-ul deja a intrat in biblioteca(i.e raspuns de la server de eroare sau
+exista deja un token JWT), afisez eroare.
+    Altfel, trimitem request catre server folosind cookie-u pentru a demonstra ca
+suntem autentificati.
+    Daca raspunsul de la server este ok, extragem JWT din raspuns, altfel afisez
+un mesaj de eroare.
+
+
+Add_book:
+    Verific ca am acces la biblioteca(exista un token JWT si raspunsul de la server
+este OK).
+    Afisez un prompt pentru detaliile de adaugat pentru carte.
+    Convertesc informatiile intr-un obiect JSON pe care il serializez.
+    Atasez JSON-ul convertit POST request-ului pe care il trimit catre server.
+    Verific raspunsul de la server si afisez mesaj de eroare daca ceva nu e in regula.
+
+
+Get_books:
+    Verific daca am acces la biblioteca(exista un token JWT si raspunsul de la server
+este OK).
+    Trimit request-ul de tip GET folosindu-ma de JWT.
+    Verific daca raspunsul e OK si afisez informatiile despre carti care au venit cu
+raspunsul, altfel afisez un mesaj de eroare.
+
+
+Get_book:
+    Verific daca am acces la biblioteca(i.e exista un token rezultat din enter_library),
+altfel afisez un mesaj de eroare.
+    Afisez un prompt pentru id-ul cartii de adaugat, verific daca acesta este ok, il
+concatenez la string-ul URL-ului si trimit request-ul folosind JWT catre server.
+    Verific daca operatia s-a incheiat cu succes, in caz de eroare afisez un raspuns
+corespunzator, altfel afisez detaliile despre carte.
+
+
+Delete_book:
+    Verific daca am acces la biblioteca(i.e exista un token rezultat din enter_library),
+altfel afisez un mesaj de eroare.
+    Afisez un prompt pentru id-ul cartii de sters, verific daca acesta este ok, il concatenez
+la string-ul URL-ului si trimit request-ul folosind JWT catre server.
+    Verific daca operatia s-a incheiat cu succes, daca respectiva carte exista sau nu si 
+afisez un mesaj corespunzator.
+
+
+Logout:
+    Se verifica daca incercam sa delogam un user care este conectat(exista un cookie de
+sesiune), altfel afisam un mesaj de eroare.
+    Trimit request-ul catre server, verific raspunsul acestuia, daca totul este in regula,
+eliberez memoria pentru cookie si token si le setez pe NULL.
+
+
+Exit:
+    Se da break din bucla while, toti socketii se inchid si toata memoria folosita
+pana in acel moment este eliberata.
+
+
+Orice alta comanda:
+    Mesaj de eroare, se trece la primirea unei alte comenzi valide.
